@@ -45,6 +45,10 @@ class RestAPI {
         }
     }
     
+    Product getProduct(String id, RestCallFormat format) {
+        return api.getProduct(token, id, format).getProduct()
+    }
+    
     ProductList getProducts(int start, int count, String status, String sort, RestCallFormat format) {                        
         return api.getProducts(token, start, count, status, sort, format).getProductList()        
     }
@@ -68,6 +72,10 @@ class RestAPI {
             throw new RuntimeException("Deletion failed")
         }
     }    
+    
+    Shop getShop(String id, RestCallFormat format) {
+        return api.getShop(token, id, format).getShop()
+    }
     
     ShopList getShops(int start, int count, String status, String sort, RestCallFormat format) {
         return api.getShops(token, start, count, status, sort, format).getShopList()

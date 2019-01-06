@@ -67,9 +67,9 @@ import groovy.json.JsonOutput
         Helper.PROD1_DATA | Helper.PROD1
         Helper.PROD2_DATA | Helper.PROD2
                 
-    }
+    }        
     
-    def "User lists two products"() {
+    def "User lists the products"() {
         given:                 
         wms.givenThat(
             get("$LowLevelAPI.BASE_PATH/products?start=0&count=10&status=ACTIVE&sort=id%7CASC").
@@ -89,8 +89,8 @@ import groovy.json.JsonOutput
     def "User updates a product" () {
         given:         
         Product p     = Helper.PROD1
-        p.name        = "NewName"
-        p.description = "NewDescription" 
+        p.name        = Helper.PROD3_DATA.name
+        p.description = Helper.PROD3_DATA.description
         wms.givenThat(
             put("$LowLevelAPI.BASE_PATH/products/1").
             withHeader(LowLevelAPI.HEADER, equalTo(Helper.TOKEN)).
@@ -101,7 +101,20 @@ import groovy.json.JsonOutput
         )
         
         expect:
-        p == api.putProduct("1", p, RestCallFormat.JSON)
+        Helper.PROD1UPD == api.putProduct("1", p, RestCallFormat.JSON)
+    }
+    
+    def "User gets a product"() {
+        wms.givenThat(
+            get("$LowLevelAPI.BASE_PATH/products/1").
+            withHeader(LowLevelAPI.HEADER, equalTo(Helper.TOKEN)).            
+            willReturn(
+                okJson(JsonOutput.toJson(Helper.PROD1UPD))
+            )
+        )
+        
+        expect:
+        Helper.PROD1UPD == api.getProduct("1", RestCallFormat.JSON)
     }
         
     def "User deletes a product"() {
@@ -142,7 +155,7 @@ import groovy.json.JsonOutput
                 
     }
     
-    def "User lists two shops"() {
+    def "User lists the shops"() {
         given:                 
         wms.givenThat(
             get("$LowLevelAPI.BASE_PATH/shops?start=0&count=10&status=ACTIVE&sort=id%7CASC").
@@ -161,9 +174,9 @@ import groovy.json.JsonOutput
     
     def "User updates a shop" () {
         given:         
-        Shop s = Helper.SHOP1
-        s.name = "NewName"
-        s.tags = ["New", "Tags"] 
+        Shop s    = Helper.SHOP1
+        s.name    = Helper.SHOP3_DATA.name
+        s.address = Helper.SHOP3_DATA.address
         wms.givenThat(
             put("$LowLevelAPI.BASE_PATH/shops/1").
             withHeader(LowLevelAPI.HEADER, equalTo(Helper.TOKEN)).
@@ -174,7 +187,20 @@ import groovy.json.JsonOutput
         )
         
         expect:
-        s == api.putShop("1", s, RestCallFormat.JSON)
+        Helper.SHOP1UPD == api.putShop("1", s, RestCallFormat.JSON)
+    }
+    
+    def "User gets a shop"() {
+        wms.givenThat(
+            get("$LowLevelAPI.BASE_PATH/shops/1").
+            withHeader(LowLevelAPI.HEADER, equalTo(Helper.TOKEN)).            
+            willReturn(
+                okJson(JsonOutput.toJson(Helper.SHOP1UPD))
+            )
+        )
+        
+        expect:
+        Helper.SHOP1UPD == api.getShop("1", RestCallFormat.JSON)
     }
         
     def "User deletes a shop"() {

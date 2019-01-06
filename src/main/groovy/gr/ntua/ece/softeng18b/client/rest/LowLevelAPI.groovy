@@ -86,22 +86,27 @@ class LowLevelAPI {
                 handleResponse(new RestResponseHandler(format))
     }
     
-    RestCallResult getProducts(String token, int start, int count, String status, String sort, RestCallFormat format) {  
+    RestCallResult getProduct(String token, String id, RestCallFormat format) {
         
-        if (!token) throw new RuntimeException("Empty token")
+        def req = Request.Get(createUrl("products/$id", format))
         
-        return Request.
-                Get(
-                    createUrl("products", format, [
-                        start : start,
-                        count : count,
-                        status: status,
-                        sort  : sort
-                    ])
-                ).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))        
+        if (token) req.addHeader(HEADER, token)
+        
+        return req.execute().handleResponse(new RestResponseHandler(format))
+    }
+    
+    RestCallResult getProducts(String token, int start, int count, String status, String sort, RestCallFormat format) {                  
+        
+        def req = Request.Get(createUrl("products", format, [
+            start : start,
+            count : count,
+            status: status,
+            sort  : sort
+        ]))
+                    
+        if (token) req.addHeader(HEADER, token)            
+        
+        return req.execute().handleResponse(new RestResponseHandler(format))        
     }
     
     RestCallResult postProduct(String token, Product product, RestCallFormat format) {
@@ -161,23 +166,27 @@ class LowLevelAPI {
                 handleResponse(new RestResponseHandler(format))
     }
     
-    
-    RestCallResult getShops(String token, int start, int count, String status, String sort, RestCallFormat format) {
+    RestCallResult getShop(String token, String id, RestCallFormat format) {
         
-        if (!token) throw new RuntimeException("Empty token")
+        def req = Request.Get(createUrl("shops/$id", format))
         
-        return Request.
-                Get(
-                    createUrl("shops", format, [
-                        start : start,
-                        count : count,
-                        status: status,
-                        sort  : sort
-                    ])
-                ).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))        
+        if (token) req.addHeader(HEADER, token)
+        
+        return req.execute().handleResponse(new RestResponseHandler(format))
+    }
+            
+    RestCallResult getShops(String token, int start, int count, String status, String sort, RestCallFormat format) {                
+        
+        def req = Request.Get(createUrl("shops", format, [
+            start : start,
+            count : count,
+            status: status,
+            sort  : sort
+        ]))
+
+        if (token) req.addHeader(HEADER, token)
+        
+        return req.execute().handleResponse(new RestResponseHandler(format))        
     }
     
     RestCallResult postShop(String token, Shop shop, RestCallFormat format) {
