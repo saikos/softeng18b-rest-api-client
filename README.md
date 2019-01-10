@@ -1,7 +1,5 @@
 # softeng18b-rest-api-client
-A Java/Groovy client for the Online Price Observatory REST API (part of [softeng18](https://github.com/saikos/softeng18b) project, used as an example in the Software Engineering course of the School of Electrical and Computer Engineering, National Technical University of Athens, 2018-2019)
-
-National Technical University of Athens 
+A Java/Groovy client for the Online Price Observatory REST API (part of [softeng18](https://github.com/saikos/softeng18b) project, used as an example in the Software Engineering course of the School of Electrical and Computer Engineering, National Technical University of Athens, 2018-2019).
 
 The client is fully operational and demonstrates the use of:
 
