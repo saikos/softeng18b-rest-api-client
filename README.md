@@ -4,7 +4,7 @@ A Java/Groovy client for the Online Price Observatory REST API
 The client is fully operational and demonstrates the use of:
 
 * The [Apache Http Components fluent client API](https://hc.apache.org/) for performing HTTP requests.
-* The [Wire Mock](https://hc.apache.org/) library for mocking the responses of HTTP requests.
+* The [Wire Mock](http://wiremock.org/) library for mocking the responses of HTTP requests.
 * The [Spock](http://spockframework.org/) framework for writing clean, declarative, maintainable test specifications.
 
 
