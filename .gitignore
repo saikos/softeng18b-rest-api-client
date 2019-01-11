@@ -9,3 +9,7 @@ build
 
 # Ignore vim backups
 *~
+
+# Ignore IJ idea files
+.idea
+*.iml
