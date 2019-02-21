@@ -17,13 +17,15 @@ import spock.lang.Stepwise
 
 import groovy.json.JsonOutput
 
-@Stepwise class RestAPISpecification extends Specification {       
+@Stepwise class RestAPISpecification extends Specification {
+
+    static final String IGNORED = System.setProperty(LowLevelAPI.IGNORE_SSL_ERRORS_SYSTEM_PROPERTY, "true")
         
     @Shared WireMockServer wms    
-    @Shared RestAPI api = new RestAPI(Helper.HOST, Helper.PORT, false)
+    @Shared RestAPI api = new RestAPI(Helper.HOST, Helper.PORT, true)
     
     def setupSpec() {
-        wms = new WireMockServer(WireMockConfiguration.options().port(Helper.PORT))                
+        wms = new WireMockServer(WireMockConfiguration.options().httpsPort(Helper.PORT))
         wms.start()                                
     }
     

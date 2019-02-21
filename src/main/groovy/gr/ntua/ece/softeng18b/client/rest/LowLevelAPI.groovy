@@ -1,13 +1,10 @@
 package gr.ntua.ece.softeng18b.client.rest
 
-import org.apache.http.client.fluent.Request
-import org.apache.http.client.fluent.Response
-import org.apache.http.client.fluent.Form
-
 import gr.ntua.ece.softeng18b.client.model.Product
-import gr.ntua.ece.softeng18b.client.model.ProductList
 import gr.ntua.ece.softeng18b.client.model.Shop
-import gr.ntua.ece.softeng18b.client.model.ShopList
+import org.apache.http.client.fluent.Executor
+import org.apache.http.client.fluent.Form
+import org.apache.http.client.fluent.Request
 
 class LowLevelAPI {
     
@@ -29,15 +26,19 @@ class LowLevelAPI {
 	
     static final String BASE_PATH = "/observatory/api"
     static final String HEADER    = "X-OBSERVATORY-AUTH"
+
+    static final String IGNORE_SSL_ERRORS_SYSTEM_PROPERTY = "IGNORE_SSL_ERRORS"
     
     private final String host
     private final int port
-    private final boolean secure       
+    private final boolean secure
+    private final ClientFactory clientFactory
     
     LowLevelAPI(String host, int port, boolean secure) {
         this.host   = host
         this.port   = port
         this.secure = secure
+        this.clientFactory = determineClientFactory()
     }
     
     private String createUrl(String endPoint, RestCallFormat format, Map params = null ) {
@@ -46,7 +47,7 @@ class LowLevelAPI {
             queryParams = [:]
         }
         else {
-            pueryParms = [format: format.getName()]
+            queryParams = [format: format.getName()]
         }        
         if (params) queryParams.putAll(params)
         String queryString
@@ -59,31 +60,34 @@ class LowLevelAPI {
         String url = "${secure ? 'https' : 'http'}://$host:$port$BASE_PATH/$endPoint$queryString"        
         //println url
         return url
-    }              
+    }
+
+    protected RestCallResult execute(Request req, RestCallFormat format) {
+        Executor.newInstance(clientFactory.newClient()).execute(req).handleResponse(new RestResponseHandler(format))
+    }
     
     RestCallResult login(String username, String password, RestCallFormat format) {
-        
-        return Request.
-                Post(createUrl("login", format)).
-                bodyForm(
-                    Form.form().
-                        add("username", username).
-                        add("password", password).
-                        build()
-                    ).
-                execute().
-                handleResponse(new RestResponseHandler(format))
+
+        return execute(
+            Request.Post(createUrl("login", format)).
+            bodyForm(
+                Form.form().
+                    add("username", username).
+                    add("password", password).
+                build()
+            ),
+            format
+        )
     }    
     
     RestCallResult logout(String token, RestCallFormat format) {
         
         if (!token) throw new RuntimeException("Empty token")
         
-        return Request.
-                Post(createUrl("logout", format)).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))
+        return execute(
+            Request.Post(createUrl("logout", format)).addHeader(HEADER, token),
+            format
+        )
     }
     
     RestCallResult getProduct(String token, String id, RestCallFormat format) {
@@ -92,7 +96,7 @@ class LowLevelAPI {
         
         if (token) req.addHeader(HEADER, token)
         
-        return req.execute().handleResponse(new RestResponseHandler(format))
+        return execute(req, format)
     }
     
     RestCallResult getProducts(String token, int start, int count, String status, String sort, RestCallFormat format) {                  
@@ -106,7 +110,7 @@ class LowLevelAPI {
                     
         if (token) req.addHeader(HEADER, token)            
         
-        return req.execute().handleResponse(new RestResponseHandler(format))        
+        return execute(req, format)
     }
     
     RestCallResult postProduct(String token, Product product, RestCallFormat format) {
@@ -116,13 +120,10 @@ class LowLevelAPI {
         Form form = Form.form()
         addToForm(form, product)
         
-        return Request.
-                Post(createUrl("products", format)).
-                bodyForm(form.build()).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))
-                
+        return execute(
+            Request.Post(createUrl("products", format)).bodyForm(form.build()).addHeader(HEADER, token),
+            format
+        )
     }
     
     RestCallResult putProduct(String token, String id, Product product, RestCallFormat format){
@@ -132,12 +133,10 @@ class LowLevelAPI {
         Form form = Form.form()
         addToForm(form, product)
         
-        return Request.
-                Put(createUrl("products/$id", format)).
-                bodyForm(form.build()).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))
+        return execute(
+            Request.Put(createUrl("products/$id", format)).bodyForm(form.build()).addHeader(HEADER, token),
+            format
+        )
     }
     
     RestCallResult patchProduct(String token, String id, String field, def value, RestCallFormat format) {
@@ -147,23 +146,20 @@ class LowLevelAPI {
         Form form = Form.form()
         addFieldToForm(form, field, value)
         
-        return Request.
-                Patch(createUrl("products/$id", format)).
-                bodyForm(form.build()).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))
+        return execute(
+            Request.Patch(createUrl("products/$id", format)).bodyForm(form.build()).addHeader(HEADER, token),
+            format
+        )
     }
     
     RestCallResult deleteProduct(String token, String id, RestCallFormat format) {
         
         if (!token) throw new RuntimeException("Empty token")
         
-        return Request.
-                Delete(createUrl("products/$id", format)).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))
+        return execute(
+            Request.Delete(createUrl("products/$id", format)).addHeader(HEADER, token),
+            format
+        )
     }
     
     RestCallResult getShop(String token, String id, RestCallFormat format) {
@@ -172,7 +168,7 @@ class LowLevelAPI {
         
         if (token) req.addHeader(HEADER, token)
         
-        return req.execute().handleResponse(new RestResponseHandler(format))
+        return execute(req, format)
     }
             
     RestCallResult getShops(String token, int start, int count, String status, String sort, RestCallFormat format) {                
@@ -186,7 +182,7 @@ class LowLevelAPI {
 
         if (token) req.addHeader(HEADER, token)
         
-        return req.execute().handleResponse(new RestResponseHandler(format))        
+        return execute(req, format)
     }
     
     RestCallResult postShop(String token, Shop shop, RestCallFormat format) {
@@ -196,12 +192,10 @@ class LowLevelAPI {
         Form form = Form.form()
         addToForm(form, shop)
         
-        return Request.
-                Post(createUrl("shops", format)).
-                bodyForm(form.build()).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))
+        return execute(
+            Request.Post(createUrl("shops", format)).bodyForm(form.build()).addHeader(HEADER, token),
+            format
+        )
     }
     
     RestCallResult putShop(String token, String id, Shop shop, RestCallFormat format) {
@@ -211,12 +205,10 @@ class LowLevelAPI {
         Form form = Form.form()
         addToForm(form, shop)
         
-        return Request.
-                Put(createUrl("shops/$id", format)).
-                bodyForm(form.build()).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))
+        return execute(
+            Request.Put(createUrl("shops/$id", format)).bodyForm(form.build()).addHeader(HEADER, token),
+            format
+        )
     }
     
     RestCallResult patchShop(String token, String id, String field, def value, RestCallFormat format) {
@@ -226,23 +218,20 @@ class LowLevelAPI {
         Form form = Form.form()
         addFieldToForm(form, field, value)
         
-        return Request.
-                Patch(createUrl("shops/$id", format)).
-                bodyForm(form.build()).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))
+        return execute(
+            Request.Patch(createUrl("shops/$id", format)).bodyForm(form.build()).addHeader(HEADER, token),
+            format
+        )
     }
     
     RestCallResult deleteShop(String token, String id, RestCallFormat format) {
         
         if (!token) throw new RuntimeException("Empty token")
         
-        return Request.
-                Delete(createUrl("shops/$id", format)).
-                addHeader(HEADER, token).
-                execute().
-                handleResponse(new RestResponseHandler(format))
+        return execute(
+            Request.Delete(createUrl("shops/$id", format)).addHeader(HEADER, token),
+            format
+        )
     }
         
     private static void addToForm(Form form, def item) {               
@@ -286,6 +275,11 @@ class LowLevelAPI {
         Form form = Form.form()
         addToForm(form, o)
         return encodeForm(form)
+    }
+
+    private static ClientFactory determineClientFactory() {
+        String prop = System.getProperty(IGNORE_SSL_ERRORS_SYSTEM_PROPERTY, "false")
+        return Boolean.parseBoolean(prop) ? new SSLErrorTolerantClientFactory() : new DefaultClientFactory()
     }
 }
 
