@@ -8,7 +8,10 @@
 plugins {
     // Apply the groovy plugin to add support for Groovy
     id 'groovy'
+    id 'maven-publish'
 }
+
+group = 'com.github.saikos'
 
 repositories {
     // Use jcenter for resolving your dependencies.
@@ -25,6 +28,14 @@ dependencies {
     
     testImplementation 'org.spockframework:spock-core:1.2-groovy-2.5',
                        'com.github.tomakehurst:wiremock:2.20.0'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 }
 
 test {
