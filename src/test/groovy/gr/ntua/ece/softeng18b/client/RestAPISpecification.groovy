@@ -1,26 +1,24 @@
 package gr.ntua.ece.softeng18b.client
 
-import gr.ntua.ece.softeng18b.client.rest.LowLevelAPI
-import gr.ntua.ece.softeng18b.client.rest.RestCallFormat
+import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import gr.ntua.ece.softeng18b.client.model.Product
 import gr.ntua.ece.softeng18b.client.model.ProductList
 import gr.ntua.ece.softeng18b.client.model.Shop
 import gr.ntua.ece.softeng18b.client.model.ShopList
-
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration
-import com.github.tomakehurst.wiremock.WireMockServer
-import static com.github.tomakehurst.wiremock.client.WireMock.*
-
+import gr.ntua.ece.softeng18b.client.rest.LowLevelAPI
+import gr.ntua.ece.softeng18b.client.rest.RestCallFormat
+import groovy.json.JsonOutput
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-import groovy.json.JsonOutput
+import static com.github.tomakehurst.wiremock.client.WireMock.*
 
 @Stepwise class RestAPISpecification extends Specification {
 
     static final String IGNORED = System.setProperty(LowLevelAPI.IGNORE_SSL_ERRORS_SYSTEM_PROPERTY, "true")
-        
+
     @Shared WireMockServer wms    
     @Shared RestAPI api = new RestAPI(Helper.HOST, Helper.PORT, true)
     
@@ -221,6 +219,42 @@ import groovy.json.JsonOutput
         then:
         noExceptionThrown()
     }
+
+    def "User posts a price"() {
+        when:
+        wms.givenThat(
+            post("$LowLevelAPI.BASE_PATH/prices").
+            withHeader(LowLevelAPI.HEADER, equalTo(Helper.TOKEN)).
+            withRequestBody(equalTo(LowLevelAPI.encode(Helper.PINFO_SUBMIT_DATA))).
+            willReturn(
+                okJson(JsonOutput.toJson(Helper.PINFO_LIST))
+            )
+        )
+
+        then:
+        def pinfo = Helper.PINFO_SUBMIT_DATA
+        Helper.PINFO_LIST == api.postPrice(
+            pinfo.price, pinfo.dateFrom, pinfo.dateTo, pinfo.productId, pinfo.shopId, RestCallFormat.JSON
+        )
+    }
+
+
+    def "User searches for prices"() {
+        when:
+        wms.givenThat(
+            get("$LowLevelAPI.BASE_PATH/prices?start=0&count=10&dateFrom=2019-02-21&dateTo=2019-02-22&sort=date%7CASC").
+            withHeader(LowLevelAPI.HEADER, equalTo(Helper.TOKEN)).
+            willReturn(
+                okJson(JsonOutput.toJson(Helper.PINFO_LIST))
+            )
+        )
+
+        then:
+        Helper.PINFO_LIST == api.getPrices(
+            0, 10, null, null, null, '2019-02-21', '2019-02-22', null, null, null, ["date|ASC"], RestCallFormat.JSON
+        )
+    }
+
     
     def "User logs out"() {
         given:

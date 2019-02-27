@@ -39,6 +39,8 @@ publishing {
 }
 
 test {
+
+    systemProperties(System.getProperties())
     
     //enable httpclient logging
     //systemProperty "org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog"

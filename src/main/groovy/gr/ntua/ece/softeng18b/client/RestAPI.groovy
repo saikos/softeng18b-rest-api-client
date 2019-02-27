@@ -1,5 +1,6 @@
 package gr.ntua.ece.softeng18b.client
 
+import gr.ntua.ece.softeng18b.client.model.PriceInfoList
 import gr.ntua.ece.softeng18b.client.model.Product
 import gr.ntua.ece.softeng18b.client.model.ProductList
 import gr.ntua.ece.softeng18b.client.model.Shop
@@ -99,6 +100,37 @@ class RestAPI {
         if (! 'OK'.equals(message)) {
             throw new RuntimeException("Deletion failed")
         }
+    }
+
+    PriceInfoList postPrice(
+        double price,
+        String dateFrom,
+        String dateTo,
+        String productId,
+        String shopId,
+        RestCallFormat format) {
+
+        return api.postPrice(token, price, dateFrom, dateTo, productId, shopId, format).getPriceInfoList()
+    }
+
+    PriceInfoList getPrices(
+        int start,
+        int count,
+        Integer geoDist,
+        Double geoLng,
+        Double geoLat,
+        String dateFrom,
+        String dateTo,
+        List<String> shopIds,
+        List<String> productIds,
+        List<String> tags,
+        List<String> sort,
+        RestCallFormat format) {
+
+        return api.getPrices(
+            token, start, count, geoDist, geoLng, geoLat, dateFrom, dateTo, shopIds, productIds, tags, sort, format
+        ).getPriceInfoList()
+
     }
     
 }
