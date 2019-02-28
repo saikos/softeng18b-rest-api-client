@@ -21,7 +21,7 @@ class ObservatoryAPIFunctionalTest extends Specification {
         when:
         String host     = System.getProperty("host")
         String port     = System.getProperty("port")
-        String protocol = System.getProperty("proto")
+        String protocol = System.getProperty("protocol")
         api = new RestAPI(host, port as Integer, protocol == 'https')
 
         then:
