@@ -61,7 +61,7 @@
       "shopIndexes": [0, 1, 2],
       "productIndexes": [0],
       "tags": null,
-      "sort": "price|ASC",
+      "sort": ["price|ASC"],
       "results": {
         "start": 0,
         "count": 10,

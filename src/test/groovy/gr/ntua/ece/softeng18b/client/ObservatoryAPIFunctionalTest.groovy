@@ -63,7 +63,7 @@ class ObservatoryAPIFunctionalTest extends Specification {
         returned.name == posted.name &&
         returned.description == posted.description
         returned.category == posted.category &&
-        returned.tags == posted.tags &&
+        returned.tags.toSorted() == posted.tags.toSorted() &&
         !returned.withdrawn
 
         where:
@@ -109,7 +109,7 @@ class ObservatoryAPIFunctionalTest extends Specification {
         returned.address == posted.address &&
         returned.lat == posted.lat &&
         returned.lng == posted.lng &&
-        returned.tags == posted.tags &&
+        returned.tags.toSorted() == posted.tags.toSorted() &&
         !returned.withdrawn
 
         where:
