@@ -69,7 +69,7 @@ class JsonRestCallResult implements RestCallResult {
         int start  = json['start'] as Integer
         int count  = json['count'] as Integer
         long total = json['total'] as Long        
-        def shops  = json['products']
+        def shops  = json['shops']
         List<Shop> shopList = shops.collect { s ->
             parseShop(s)
         }
