@@ -149,7 +149,7 @@ class ObservatoryAPIFunctionalTest extends Specification {
         )
         expect:
         list.start == 0 &&
-        list.total == Helper.durationInDays(p.dateFrom as String, p.dateTo as String) &
+        list.total == Helper.durationInDays(p.dateFrom as String, p.dateTo as String) + 1 &&
         list.prices.every { PriceInfo pinfo ->
             pinfo.price == p.price &&
             pinfo.shopId == shopIds[p.shopIndex] &&
