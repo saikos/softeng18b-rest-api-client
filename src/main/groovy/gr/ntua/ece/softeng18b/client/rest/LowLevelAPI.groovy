@@ -127,7 +127,7 @@ class LowLevelAPI {
         addToForm(form, product)
 
         return execute(
-            Request.Post(createUrl("products", format)).bodyForm(form.build(), Charset.defaultCharset()).addHeader(HEADER, token),
+            Request.Post(createUrl("products", format)).bodyForm(form.build(), Charset.forName("UTF-8")).addHeader(HEADER, token),
             format
         )
     }
@@ -199,7 +199,7 @@ class LowLevelAPI {
         addToForm(form, shop)
 
         return execute(
-            Request.Post(createUrl("shops", format)).bodyForm(form.build(), Charset.defaultCharset()).addHeader(HEADER, token),
+            Request.Post(createUrl("shops", format)).bodyForm(form.build(), Charset.forName("UTF-8")).addHeader(HEADER, token),
             format
         )
     }
@@ -259,7 +259,7 @@ class LowLevelAPI {
         addFieldToForm(form, "shopId", shopId)
 
         return execute(
-            Request.Post(createUrl("prices", format)).bodyForm(form.build(), Charset.defaultCharset()).addHeader(HEADER, token),
+            Request.Post(createUrl("prices", format)).bodyForm(form.build(), Charset.forName("UTF-8")).addHeader(HEADER, token),
             format
         )
 
