@@ -63,7 +63,7 @@ class LowLevelAPI {
             queryString = ""
         }
         String url = "${secure ? 'https' : 'http'}://$host:$port$BASE_PATH/$endPoint$queryString"
-        //println "Fetching $url"
+        println "### Contacting REST endpoint: $url"
         return url
     }
 

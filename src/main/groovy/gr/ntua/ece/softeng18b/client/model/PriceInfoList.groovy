@@ -1,6 +1,8 @@
 package gr.ntua.ece.softeng18b.client.model
 
-class PriceInfoList extends Paging {
+import groovy.transform.Canonical
+
+@Canonical class PriceInfoList extends Paging {
 
     List<PriceInfo> prices
 

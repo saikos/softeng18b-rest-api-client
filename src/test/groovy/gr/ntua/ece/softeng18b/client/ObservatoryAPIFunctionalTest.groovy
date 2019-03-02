@@ -58,6 +58,7 @@ class ObservatoryAPIFunctionalTest extends Specification {
         )
         Product returned = api.postProduct(posted, RestCallFormat.JSON)
         productIds.add(returned.getId())
+        println "Created product $returned at index ${productIds.size()-1}"
 
         expect:
         returned.name == posted.name &&
@@ -81,6 +82,7 @@ class ObservatoryAPIFunctionalTest extends Specification {
             q.sort as String,
             RestCallFormat.JSON
         )
+        println "Fetched product list $list"
 
         expect:
         list.start == 0 &&
@@ -103,6 +105,7 @@ class ObservatoryAPIFunctionalTest extends Specification {
         )
         Shop returned = api.postShop(posted, RestCallFormat.JSON)
         shopIds.add(returned.getId())
+        println "Created shop $returned at index ${shopIds.size()-1}"
 
         expect:
         returned.name == posted.name &&
@@ -126,6 +129,7 @@ class ObservatoryAPIFunctionalTest extends Specification {
             q.sort as String,
             RestCallFormat.JSON
         )
+        println "Fetched shop list $list"
 
         expect:
         list.start == 0 &&
@@ -147,6 +151,8 @@ class ObservatoryAPIFunctionalTest extends Specification {
             shopIds[p.shopIndex as int] as String,
             RestCallFormat.JSON
         )
+        println "Posted price ${p.price} and got list $list"
+
         expect:
         list.start == 0 &&
         list.total == Helper.durationInDays(p.dateFrom as String, p.dateTo as String) + 1 &&
@@ -177,12 +183,13 @@ class ObservatoryAPIFunctionalTest extends Specification {
             q.sort as List<String>,
             RestCallFormat.JSON
         )
+        println "Fetched prices list $list"
 
         expect:
         list.start == q.results.start &&
         list.count == q.results.count &&
         list.total == q.results.total &&
-        (0..<list.total).every { i ->
+        (0..<list.prices.size()).every { i ->
             list.prices[i].price == q.results.prices[i].price &&
             list.prices[i].date  == q.results.prices[i].date &&
             list.prices[i].shopId == shopIds[q.results.prices[i].shopIndex] &&

@@ -49,6 +49,6 @@ test {
     
     testLogging {
         //enable system out,err
-        //showStandardStreams = true
+        showStandardStreams = true
     }
 }
