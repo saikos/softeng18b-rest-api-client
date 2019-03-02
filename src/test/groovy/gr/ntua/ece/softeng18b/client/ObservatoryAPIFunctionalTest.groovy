@@ -57,7 +57,7 @@ class ObservatoryAPIFunctionalTest extends Specification {
             tags: p.tags as List<String>
         )
         Product returned = api.postProduct(posted, RestCallFormat.JSON)
-        productIds.push(returned.getId())
+        productIds.add(returned.getId())
 
         expect:
         returned.name == posted.name &&
@@ -102,7 +102,7 @@ class ObservatoryAPIFunctionalTest extends Specification {
             tags: s.tags as List<String>
         )
         Shop returned = api.postShop(posted, RestCallFormat.JSON)
-        shopIds.push(returned.getId())
+        shopIds.add(returned.getId())
 
         expect:
         returned.name == posted.name &&
