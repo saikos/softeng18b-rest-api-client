@@ -140,7 +140,7 @@
     {
       "start": 0,
       "count": 10,
-      "geoDist": 5,
+      "geoDist": 7,
       "geoLng": 23.774008,
       "geoLat": 37.980291,
       "dateFrom": "2019-03-02",
@@ -154,12 +154,12 @@
         "count": 10,
         "total": 6,
         "prices": [
-          {"price": 19.00, "dateFrom":  "2019-03-02", "dateTo":  "2019-03-02", "shopIndex": 1, "productIndex": 8},
-          {"price": 20.50, "dateFrom":  "2019-03-02", "dateTo":  "2019-03-02", "shopIndex": 2, "productIndex": 8},
-          {"price": 50.50, "dateFrom":  "2019-03-02", "dateTo":  "2019-03-02", "shopIndex": 2, "productIndex": 4},
-          {"price": 51.00, "dateFrom":  "2019-03-02", "dateTo":  "2019-03-02", "shopIndex": 1, "productIndex": 4},
-          {"price": 60.50, "dateFrom":  "2019-03-02", "dateTo":  "2019-03-02", "shopIndex": 2, "productIndex": 9},
-          {"price": 61.00, "dateFrom":  "2019-03-02", "dateTo":  "2019-03-02", "shopIndex": 1, "productIndex": 9}
+          {"price": 19.00, "date":  "2019-03-02", "shopIndex": 1, "productIndex": 8},
+          {"price": 20.50, "date":  "2019-03-02", "shopIndex": 2, "productIndex": 8},
+          {"price": 50.50, "date":  "2019-03-02", "shopIndex": 2, "productIndex": 4},
+          {"price": 51.00, "date":  "2019-03-02", "shopIndex": 1, "productIndex": 4},
+          {"price": 60.50, "date":  "2019-03-02", "shopIndex": 2, "productIndex": 9},
+          {"price": 61.00, "date":  "2019-03-02", "shopIndex": 1, "productIndex": 9}
         ]
       }
     },
