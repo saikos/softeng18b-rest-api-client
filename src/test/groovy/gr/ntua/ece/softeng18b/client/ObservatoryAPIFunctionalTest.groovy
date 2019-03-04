@@ -85,9 +85,10 @@ class ObservatoryAPIFunctionalTest extends Specification {
         println "Fetched product list $list"
 
         expect:
-        list.start == 0 &&
-        list.total == q.results.size() &&
-        list.products.collect { it.name } == q.results as List<String>
+        list.start == q.results.start &&
+        list.count == q.results.count &&
+        list.total == q.results.total &&
+        list.products.collect { it.name } == q.results.products as List<String>
 
         where:
         q << testData.products_queries
@@ -132,9 +133,10 @@ class ObservatoryAPIFunctionalTest extends Specification {
         println "Fetched shop list $list"
 
         expect:
-        list.start == 0 &&
-        list.total == q.results.size() &&
-        list.shops.collect { it.name } == q.results as List<String>
+        list.start == q.results.start &&
+        list.count == q.results.count &&
+        list.total == q.results.total &&
+        list.shops.collect { it.name } == q.results.shops as List<String>
 
         where:
         q << testData.shops_queries
