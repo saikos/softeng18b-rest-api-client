@@ -86,7 +86,6 @@ class ObservatoryAPIFunctionalTest extends Specification {
 
         expect:
         list.start == 0 &&
-        list.total == q.results.size() &&
         list.products.collect { it.name } == q.results as List<String>
 
         where:
@@ -133,7 +132,6 @@ class ObservatoryAPIFunctionalTest extends Specification {
 
         expect:
         list.start == 0 &&
-        list.total == q.results.size() &&
         list.shops.collect { it.name } == q.results as List<String>
 
         where:
